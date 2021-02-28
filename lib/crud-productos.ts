@@ -8,6 +8,9 @@ export class CrudProductos extends cdk.Construct{
     // Constructor de la clase
     constructor(scope: cdk.Construct,id:string){
        super(scope,id);
+       // ========================================================================
+       // Resource: Lambda Function
+       // ========================================================================
        // define un recurso lambda y lo asigna al atributo de la clase
        this.lambdaCrud = new lambda.Function(this, "LambdaFunctionCrud",{
            functionName: "lambda-cdk-products-crud",
@@ -15,6 +18,9 @@ export class CrudProductos extends cdk.Construct{
            code: lambda.Code.fromAsset("lambda"), // codigo cargado de un directorio lambda
            handler: "lambda-function-crud.handler" // el archivo es lambda-function-crud, la funcion en "handler"
         });
+       // ========================================================================
+       // Resource: Dynamo DB Table
+       // ========================================================================
        // Define el nombre de la tabla
        const tName= "dynamodb-cdk-nicotobo";
        //Crea la tabla
@@ -23,12 +29,15 @@ export class CrudProductos extends cdk.Construct{
         tableName: tName,
         // define la PK
         partitionKey: {name:"id", type: dynamodb.AttributeType.STRING },
-        // The default removal policy is RETAIN, which means that cdk destroy will not attempt to delete
-        // the new table, and it will remain in your account until manually deleted. By setting the policy to 
-        // DESTROY, cdk destroy will delete the table (even if it has data in it)
-        removalPolicy: cdk.RemovalPolicy.DESTROY, // NOT recommended for production code
+        // La política de eliminación predeterminada es RETAIN, lo que significa que cdk destroy no intentará eliminar
+        // la nueva tabla, y permanecerá en su cuenta hasta que se elimine manualmente. Al establecer la política en
+        // DESTROY, cdk destroy eliminará la tabla (incluso si tiene datos)
+        removalPolicy: cdk.RemovalPolicy.DESTROY, // NO recomendado para el código de producción
        });
       // da permisos de lectura/escritura de la funcion a la lambda
       table.grantReadWriteData(this.lambdaCrud);
+      new cdk.CfnOutput(this, "dynamodb-name", {
+        value:`${table.tableName}`,
+      });
     }
 }

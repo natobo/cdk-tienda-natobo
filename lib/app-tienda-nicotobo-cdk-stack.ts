@@ -1,75 +1,28 @@
 import * as cdk from '@aws-cdk/core';
-import * as apigw from "@aws-cdk/aws-apigateway";
 import {CrudProductos} from "./crud-productos";
+import {ImagenProductos} from "./imagen-productos";
+import {ApiGatewayCdk} from "./api-gateway-cdk";
+import {CognitoCdk} from "./cognito-cdk";
+import {CloudfrontWafCdk} from "./cloudfront-waf-cdk";
+
 export class AppTiendaNicotoboCdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     // nombre del stack
-    const stackName = 'app-cdk-nicotobo';
-    // componente que realiza el crud de los productos
+    const pStackName = 'app-cdk-nicotobo';
+    // Componente que realiza el crud de los productos
     const crudProductos = new CrudProductos(this,"crud-productos");
-    // define un recurso API Gateway REST API respaldado por la funcion "Hola"
-    const api = new apigw.RestApi(this, `${stackName}-api`, {
-      defaultCorsPreflightOptions: {
-        // Define respuestas OPTIONS a todos 
-        allowOrigins: apigw.Cors.ALL_ORIGINS,
-      },
-      restApiName: `${stackName}-service`,
+    // Componente que sube imagenes de los productos
+    const imagenProductos = new ImagenProductos(this,"imagenes-productos");
+    // Componente que sube el apigateway de la aplicacion
+    new ApiGatewayCdk(this,"api-gateway-cdk",{
+      functionCrud: crudProductos.lambdaCrud,
+      functionImg: imagenProductos.lambdaSign,
+      stackName: pStackName
     });
-    const crudEndpoint = api.root.addResource(`${stackName}-crud`);
-    const createOneIntegration = new apigw.LambdaIntegration(crudProductos.lambdaCrud,{
-      proxy:false,
-      integrationResponses:[
-        {
-          // Successful response from the Lambda function, no filter defined
-          //  - the selectionPattern filter only tests the error message
-          // We will set the response status code to 200
-          statusCode: "200",
-          responseParameters: {
-            // We can map response parameters
-            // - Destination parameters (the key) are the response parameters (used in mappings)
-            // - Source parameters (the value) are the integration response parameters or expressions
-            'method.response.header.Content-Type': "'application/json'",
-            'method.response.header.Access-Control-Allow-Origin': "'*'",
-            'method.response.header.Access-Control-Allow-Credentials': "'true'"
-          }
-        },
-        {
-          // For errors, we check if the error message is not empty, get the error data
-          selectionPattern: '(\n|.)+',
-          // We will set the response status code to 200
-          statusCode: "400",
-          responseParameters: {
-              'method.response.header.Content-Type': "'application/json'",
-              'method.response.header.Access-Control-Allow-Origin': "'*'",
-              'method.response.header.Access-Control-Allow-Credentials': "'true'"
-          }
-        }
-      ]
-    });
-    crudEndpoint.addMethod('POST', createOneIntegration,{
-      methodResponses:[
-        {
-          // Successful response from the integration
-          statusCode: '200',
-          // Define what parameters are allowed or not
-          responseParameters: {
-            'method.response.header.Content-Type': true,
-            'method.response.header.Access-Control-Allow-Origin': true,
-            'method.response.header.Access-Control-Allow-Credentials': true
-          }
-        },
-        {
-          // Same thing for the error responses
-          statusCode: '400',
-          responseParameters: {
-            'method.response.header.Content-Type': true,
-            'method.response.header.Access-Control-Allow-Origin': true,
-            'method.response.header.Access-Control-Allow-Credentials': true
-          }
-        }
-      ]
-    });
-    //addCorsOptions(items);
+    // Componente que crea el userpool de Cognito
+    new CognitoCdk(this,"cognito-productos");
+    // Componente que crea CDN y WAF
+    new CloudfrontWafCdk(this,"Waf-Cloudfront-productos");
   }
 }
