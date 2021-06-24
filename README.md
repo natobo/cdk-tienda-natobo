@@ -1,18 +1,17 @@
-# Welcome to your CDK TypeScript project!
+# ¡Bienvenido a cdk-tienda-natobo! 🚀
 
-You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`AppTiendaNicotoboCdkStack`)
-which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+_Esta es una aplicación que despliega un backend serverless, un CDN del front desde un bucket s3 especificado y una capa de segruidad del servicio de WAF de AWS. La aplicación esta desarrollada con el framework CDK de AWS y hace parte de la instancia del stack (`AppTiendaNicotoboCdkStack`)_
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+El arichivo `cdk.json` explica como ejecutar la instalación.
 
-## Useful commands
+## Comandos útiles ⚙️
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+ * `npm run build`   Compilar typescript a javascript
+ * `npm run watch`   estar atento a los cambios y compilar
+ * `npm run test`    realiza las pruebas unitarias (no implementadas)
+ * `cdk deploy`      desplegar el stack en su cuenta / región predeterminada de AWS
+ * `cdk diff`        compara la pila desplegada con el estado actual
+ * `cdk synth`       emite la plantilla CloudFormation sintetizada
 
 # Introduction 
 TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
