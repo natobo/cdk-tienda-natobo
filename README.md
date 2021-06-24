@@ -54,6 +54,26 @@ correr el siguiente comando en consola:
     ```bash
     cdk deploy
     ```
+>:warning: **Si se esta usando un perfil de AWS con MFA** Correr el siguiente comando:
+>
+>    ```bash
+>    aws sts get-session-token --duration-seconds 129600  --serial-number arn:aws:iam::ID_CUENTA_AWS:mfa/USUARIO --token-code TOKENMFA
+>    ```
+>
+> Se debe poner en el archivo crendentials la siguiente configuración con los datos que de el comando de aws CLI anterior:
+>    ```
+>    [default]
+>    aws_access_key_id = XXXXX
+>    aws_secret_access_key = XXXXXXX
+>    [mfa]
+>    aws_access_key_id = DATOS DE LLAVE TEMPORAL
+>    aws_secret_access_key = DATOS SECRET ACCESS KEY
+>    aws_session_token = DATOS TOKEN
+>    ```
+> Finalmente, ejecutar el siguiente comando:
+>    ```bash
+>    cdk deploy --profile mfa
+>    ```
     
 ## Lecturas talleres relacionados 📖
 - [CDK Workshop](https://cdkworkshop.com/)
