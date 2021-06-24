@@ -24,14 +24,37 @@ Este proyecto se desarrollo con el fin de crear un CRUD básico de una tienda co
 * DynamoDB
 * IAM
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+# Pasos para realizar el despliegue de toda la arquitectura 📦
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+- Verificar que se tiene [Node.js](https://nodejs.org) mínimo versión 10.14 o más alta
 
+    ```bash
+    # determinar version de node
+    node --version
+    ```
 
+- Clonar el repositorio
+
+    ```bash
+    git clone https://github.com/natobo/cdk-tienda-natobo
+    ```
+
+- Dentro de la terminal, navegar a `cdk-tienda-natobo/`
+
+    ```bash
+    cd cdk-tienda-natobo
+    ```
+- Instalar módulos con npm
+
+    ```bash
+     npm install
+    ```
+ - Asegurarse de tener bien las [credenciales de AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) en el archivo  `.aws/credentials` y 
+correr el siguiente comando en consola:
+    ```bash
+    cdk deploy
+    ```
+    
+## Lecturas talleres relacionados 📖
+- [CDK Workshop](https://cdkworkshop.com/)
+- [cloudformation Workshop](https://cfn101.workshop.aws/)
